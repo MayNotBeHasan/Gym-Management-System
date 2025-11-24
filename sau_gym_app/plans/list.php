@@ -1,0 +1,48 @@
+<?php
+include "../auth/check_login.php";
+include "../auth/check_role.php";
+allow_role(['admin']);
+
+include "../config/db.php";
+include "../includes/header.php";
+include "../includes/navbar.php";
+
+$sql = "SELECT * FROM membership_plans";
+$result = mysqli_query($conn, $sql);
+?>
+
+<div class="container mt-4">
+    <h2>Membership Plans</h2>
+    <a href="add.php" class="btn btn-primary mb-3">Add New Plan</a>
+
+    <table class="table table-striped">
+        <tr>
+            <th>#</th>
+            <th>Plan Name</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        <?php while($row = mysqli_fetch_assoc($result)) { ?>
+        <tr>
+            <td><?= $row['plan_id'] ?></td>
+            <td><?= $row['plan_name'] ?></td>
+            <td><?= $row['duration_months'] ?> months</td>
+            <td>₹<?= $row['price'] ?></td>
+            <td><?= $row['status'] ?></td>
+
+            <td>
+                <a href="edit.php?id=<?= $row['plan_id'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                <a onclick="return confirm('Delete this plan?')" 
+                   href="delete.php?id=<?= $row['plan_id'] ?>" 
+                   class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        <?php } ?>
+
+    </table>
+</div>
+
+<?php include "../includes/footer.php"; ?>
